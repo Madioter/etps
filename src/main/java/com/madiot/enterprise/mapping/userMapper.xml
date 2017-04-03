@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.madiot.enterprise.dao.UserDao">
+    <resultMap type="com.madiot.enterprise.model.User" id="userResult">
+
+    </resultMap>
+
+    <select id="doLogin" resultMap="userResult">
+        select s.id,s.username,s.name,s.password,s.number
+        from t_user s
+        where username = #{username} and password = #{password} limit 1;
+    </select>
+
+    <select id="selectUserByName" resultMap="userResult">
+        <bind name="username" value="'%' + _parameter.username + '%'"/>
+        select s.id,s.username,s.name,s.password,s.number
+        from t_user s
+        <where>
+            s.username like #{username}
+        </where>
+        <if test="startNum >= 0 and pageSize >= 0">
+            limit #{startNum}, #{pageSize}
+        </if>
+    </select>
+
+    <select id="countUserByName" resultType="int">
+        <bind name="username" value="'%' + _parameter.username + '%'"/>
+        select count(1)
+        from t_user s
+        <where>
+            s.username like #{username}
+        </where>
+    </select>
+
+    <update id="updatePassword">
+        update t_user set password = #{password} where id = #{id}
+    </update>
+
+    <insert id="insertUser" parameterType="com.madiot.enterprise.model.User"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_user(name,username,password,number)
+        values
+        (#{name},#{username},#{password},#{number})
+    </insert>
+
+    <update id="updateUser" parameterType="com.madiot.enterprise.model.User">
+        update t_user set
+            name = #{name},
+            username = #{username},
+            password = #{password},
+            number = #{number}
+          where id = #{id}
+    </update>
+
+    <delete id="deleteUser">
+        delete from t_user where id = #{id} and username != 'admin'
+    </delete>
+
+    <select id="checkUserExist" resultType="int">
+        select count(1) from t_user t where t.username = #{username} and t.id != #{id} limit 1;
+    </select>
+</mapper>
