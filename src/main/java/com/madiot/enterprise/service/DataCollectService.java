@@ -35,9 +35,10 @@ public class DataCollectService implements IDataCollectService {
     private IAttachmentService attachmentService;
 
     @Override
-    public void collectData(String enterpriseName, int startRows, int endRows, CompletableFuture<Boolean> result) throws RestException {
+    public void collectData(String enterpriseName, int localadm, int startRows, int endRows, CompletableFuture<Boolean> result) throws RestException {
         CollectRequest collectRequest = new CollectRequest();
         collectRequest.setEntname(enterpriseName);
+        collectRequest.setLocaladm(localadm);
         if (endRows == 0) {
             endRows = startRows + 500;
         }

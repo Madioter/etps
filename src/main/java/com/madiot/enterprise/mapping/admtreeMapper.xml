@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.madiot.enterprise.dao.AdmtreeDao">
+    <resultMap type="com.madiot.enterprise.model.Admtree" id="admResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="state" column="state"/>
+        <result property="isInit" column="init"/>
+    </resultMap>
+
+    <select id="selectByParentId" resultMap="admResult">
+        select s.id,s.name,s.parent_id,s.state,s.init
+        from c_admtree s
+        <where>
+            s.parent_id = #{parentId}
+        </where>
+    </select>
+
+    <select id="selectById" resultMap="admResult">
+        select s.id,s.name,s.parent_id,s.state,s.init
+        from c_admtree s
+        <where>
+            s.id = #{id}
+        </where>
+    </select>
+
+    <insert id="insertAdmByBatch" parameterType="List">
+        insert into c_admtree(id,name,parent_id,state,init)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id}, #{item.name}, #{item.parentId}, #{item.state}, 0)
+        </foreach>
+    </insert>
+
+    <update id="init">
+        update c_admtree set
+            init = 1
+          where id = #{id}
+    </update>
+</mapper>

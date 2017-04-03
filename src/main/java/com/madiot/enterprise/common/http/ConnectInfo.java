@@ -18,6 +18,10 @@ public class ConnectInfo {
 
     private String defaultPassword;
 
+    private String admtreeUrl;
+
+    private int topadmId;
+
     public String getCollectUrl() {
         return collectUrl;
     }
@@ -56,5 +60,21 @@ public class ConnectInfo {
 
     public void setDefaultPassword(String defaultPassword) {
         this.defaultPassword = defaultPassword;
+    }
+
+    public String getAdmtreeUrl() {
+        return admtreeUrl;
+    }
+
+    public void setAdmtreeUrl(String admtreeUrl) {
+        this.admtreeUrl = admtreeUrl;
+    }
+
+    public int getTopadmId() {
+        return topadmId;
+    }
+
+    public void setTopadmId(int topadmId) {
+        this.topadmId = topadmId;
     }
 }

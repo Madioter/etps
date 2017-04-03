@@ -3,9 +3,11 @@ package com.madiot.enterprise.rest;
 import com.madiot.enterprise.common.exception.RestException;
 import com.madiot.enterprise.common.http.ConnectInfo;
 import com.madiot.enterprise.common.util.HttpUtil;
+import com.madiot.enterprise.model.Admtree;
 import com.madiot.enterprise.model.collect.CollectRequest;
 import com.madiot.enterprise.model.collect.CollectResponse;
 import com.madiot.enterprise.model.collect.EnterpriseCollect;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,8 +20,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +43,8 @@ public class DataCollectRest implements IDataCollectRest {
         String responseStr = HttpUtil.getJson(connectInfo.getCollectUrl(), request.toString());
         if (responseStr.startsWith("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML")) {
             result.complete(false);
+        } else {
+            result.complete(true);
         }
         JSONObject jsonObject = JSONObject.fromObject(responseStr);
         Map<String, Class> classMap = new HashMap<String, Class>();
@@ -49,26 +52,31 @@ public class DataCollectRest implements IDataCollectRest {
         return (CollectResponse) JSONObject.toBean(jsonObject, CollectResponse.class, classMap);
     }
 
-    private String getPostResponse(String url, String params) throws RestException {
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-        // 60秒超时
-        httpClientBuilder.setConnectionTimeToLive(60, TimeUnit.SECONDS);
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setEntity(new StringEntity(params, HTTP.UTF_8));
-        CloseableHttpClient httpClient = httpClientBuilder.build();
-        try {
-            HttpResponse response = httpClient.execute(httpPost);
-            HttpEntity entity = response.getEntity();
-            String body = EntityUtils.toString(entity);
-            return body;
-        } catch (Exception e) {
-            throw new RestException(e.getMessage(), e.getCause());
-        } finally {
-            try {
-                httpClient.close();
-            } catch (Exception e) {
-            }
+    @Override
+    public List<Admtree> getAdmTrees(Integer parentId) throws RestException {
+        String responseStr = HttpUtil.getJson(connectInfo.getAdmtreeUrl(), "id=" + parentId);
+        if (responseStr.startsWith("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML")) {
+            throw new RestException("请先登陆监管平台");
         }
+        JSONArray jsonArray = JSONArray.fromObject(responseStr);
+        Iterator<JSONObject> iterator = jsonArray.iterator();
+        List<Admtree> admtrees = new ArrayList<>();
+        while (iterator.hasNext()) {
+            JSONObject jsonObject = iterator.next();
+            Admtree admtree = new Admtree();
+            admtree.setId(Integer.valueOf((String)jsonObject.get("id")));
+            admtree.setName((String)jsonObject.get("text"));
+            admtree.setParentId(Integer.valueOf((String)jsonObject.get("parent_id")));
+            if (jsonObject.get("state").equals("open")) {
+                admtree.setState(0);
+                admtree.setIsInit(1);
+            } else {
+                admtree.setState(1);
+                admtree.setIsInit(0);
+            }
+            admtrees.add(admtree);
+        }
+        return admtrees;
     }
 
 }

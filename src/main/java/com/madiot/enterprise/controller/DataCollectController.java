@@ -3,10 +3,9 @@ package com.madiot.enterprise.controller;
 import com.madiot.enterprise.common.AuthUtil;
 import com.madiot.enterprise.common.CommonConstant;
 import com.madiot.enterprise.common.FileUpDownUtils;
-import com.madiot.enterprise.model.Attachment;
-import com.madiot.enterprise.model.ResponseList;
-import com.madiot.enterprise.model.ResponseVo;
-import com.madiot.enterprise.model.User;
+import com.madiot.enterprise.common.exception.RestException;
+import com.madiot.enterprise.model.*;
+import com.madiot.enterprise.service.IAdmtreeService;
 import com.madiot.enterprise.service.IAttachmentService;
 import com.madiot.enterprise.service.IDataCollectService;
 import com.madiot.enterprise.thread.CollectDataThread;
@@ -40,6 +39,9 @@ public class DataCollectController {
     @Autowired
     private IAttachmentService attachmentService;
 
+    @Autowired
+    private IAdmtreeService admtreeService;
+
     @RequestMapping("/attachmentList")
     public String attachmentList() {
         return "attachment/attachmentList";
@@ -47,8 +49,8 @@ public class DataCollectController {
 
     @RequestMapping("/collectData")
     @ResponseBody
-    public String collectData(String enterpriseName, int startRows, int endRows) {
-        CollectDataThread collectDataThread = new CollectDataThread(enterpriseName, startRows, endRows, dataCollectService);
+    public String collectData(String enterpriseName, int localadm, int startRows, int endRows) {
+        CollectDataThread collectDataThread = new CollectDataThread(enterpriseName, localadm, startRows, endRows, dataCollectService);
         taskExecutor.execute(collectDataThread);
         try {
             return collectDataThread.getResult();
@@ -94,5 +96,11 @@ public class DataCollectController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @RequestMapping("/admtree")
+    @ResponseBody
+    public List<AdmtreeVo> admtree(Integer id) throws RestException {
+        return admtreeService.getList(id);
     }
 }

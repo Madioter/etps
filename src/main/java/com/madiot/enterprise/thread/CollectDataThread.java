@@ -12,6 +12,8 @@ public class CollectDataThread implements Runnable {
 
     private String enterpriseName;
 
+    private int localadm;
+
     private int startRows;
 
     private int endRows;
@@ -20,8 +22,9 @@ public class CollectDataThread implements Runnable {
 
     private CompletableFuture<Boolean> result;
 
-    public CollectDataThread(String enterpriseName, int startRows, int endRows, IDataCollectService dataCollectService) {
+    public CollectDataThread(String enterpriseName, int localadm, int startRows, int endRows, IDataCollectService dataCollectService) {
         this.enterpriseName = enterpriseName;
+        this.localadm = localadm;
         this.startRows = startRows;
         this.endRows = endRows;
         this.dataCollectService = dataCollectService;
@@ -31,7 +34,7 @@ public class CollectDataThread implements Runnable {
     @Override
     public void run() {
         try {
-            dataCollectService.collectData(enterpriseName, startRows, endRows, result);
+            dataCollectService.collectData(enterpriseName, localadm, startRows, endRows, result);
         } catch (Exception e) {
             result.complete(false);
         }

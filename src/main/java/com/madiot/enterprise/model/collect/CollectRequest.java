@@ -13,6 +13,11 @@ public class CollectRequest {
     private String entname;
 
     /**
+     * 所属辖区id
+     */
+    private int localadm;
+
+    /**
      * 第几页
      */
     private int page;
@@ -42,11 +47,23 @@ public class CollectRequest {
         return rows;
     }
 
+    public int getLocaladm() {
+        return localadm;
+    }
+
+    public void setLocaladm(int localadm) {
+        this.localadm = localadm;
+    }
+
     public String toString() {
+        StringBuilder builder = new StringBuilder();
         if (!StringUtil.isEmpty(entname)) {
-            return "entname=&page=" + (page + 1) + "&rows=" + rows;
-        } else {
-            return "page=" + (page + 1) + "&rows=" + rows;
+            builder.append("entname=" + entname + "&");
         }
+        if (localadm > 0) {
+            builder.append("localadm=" + localadm + "&");
+        }
+        builder.append("page=" + (page + 1) + "&rows=" + rows);
+        return builder.toString();
     }
 }

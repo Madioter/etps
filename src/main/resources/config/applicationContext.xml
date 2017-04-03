@@ -88,10 +88,12 @@
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 
     <bean id="connectInfo" class="com.madiot.enterprise.common.http.ConnectInfo">
-    <property name="collectUrl" value="${collectUrl}"></property>
-    <property name="loginUrl" value="${loginUrl}"></property>
-    <property name="imageUrl" value="${imageUrl}"></property>
-</bean>
+        <property name="collectUrl" value="${collectUrl}"></property>
+        <property name="loginUrl" value="${loginUrl}"></property>
+        <property name="imageUrl" value="${imageUrl}"></property>
+        <property name="admtreeUrl" value="${admtreeUrl}"></property>
+        <property name="topadmId" value="${topadmId}"></property>
+    </bean>
 
 
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
