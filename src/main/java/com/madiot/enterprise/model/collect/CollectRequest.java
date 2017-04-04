@@ -15,7 +15,7 @@ public class CollectRequest {
     /**
      * 所属辖区id
      */
-    private int localadm;
+    private Integer localadm;
 
     /**
      * 第几页
@@ -60,7 +60,7 @@ public class CollectRequest {
         if (!StringUtil.isEmpty(entname)) {
             builder.append("entname=" + entname + "&");
         }
-        if (localadm > 0) {
+        if (localadm != null) {
             builder.append("localadm=" + localadm + "&");
         }
         builder.append("page=" + (page + 1) + "&rows=" + rows);

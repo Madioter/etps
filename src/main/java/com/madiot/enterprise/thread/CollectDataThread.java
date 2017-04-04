@@ -12,7 +12,7 @@ public class CollectDataThread implements Runnable {
 
     private String enterpriseName;
 
-    private int localadm;
+    private Integer localadm;
 
     private int startRows;
 
@@ -22,7 +22,7 @@ public class CollectDataThread implements Runnable {
 
     private CompletableFuture<Boolean> result;
 
-    public CollectDataThread(String enterpriseName, int localadm, int startRows, int endRows, IDataCollectService dataCollectService) {
+    public CollectDataThread(String enterpriseName, Integer localadm, int startRows, int endRows, IDataCollectService dataCollectService) {
         this.enterpriseName = enterpriseName;
         this.localadm = localadm;
         this.startRows = startRows;

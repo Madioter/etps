@@ -49,7 +49,7 @@ public class DataCollectController {
 
     @RequestMapping("/collectData")
     @ResponseBody
-    public String collectData(String enterpriseName, int localadm, int startRows, int endRows) {
+    public String collectData(String enterpriseName, Integer localadm, int startRows, int endRows) {
         CollectDataThread collectDataThread = new CollectDataThread(enterpriseName, localadm, startRows, endRows, dataCollectService);
         taskExecutor.execute(collectDataThread);
         try {
