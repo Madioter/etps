@@ -1,5 +1,6 @@
 package com.madiot.enterprise.controller;
 
+import com.madiot.enterprise.common.AuthUtil;
 import com.madiot.enterprise.common.CommonConstant;
 import com.madiot.enterprise.common.http.ConnectInfo;
 import com.madiot.enterprise.common.util.HttpUtil;
@@ -110,7 +111,7 @@ public class LoginController {
         ResponseVo responseVo = new ResponseVo();
         String params = "code=" + code + "&password=" + password + "&checkCode=" + checkCode;
         String result = HttpUtil.sendPost(connectInfo.getLoginUrl(), params);
-        if (result.contains("<title>登录页面</title>")) {
+        if (!AuthUtil.checkLogin(result)) {
             responseVo.setMessage("登录失败，请检查用户名、密码或验证码是否正确");
             responseVo.setSuccess(false);
         }else {

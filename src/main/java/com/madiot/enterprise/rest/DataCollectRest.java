@@ -1,5 +1,6 @@
 package com.madiot.enterprise.rest;
 
+import com.madiot.enterprise.common.AuthUtil;
 import com.madiot.enterprise.common.exception.RestException;
 import com.madiot.enterprise.common.http.ConnectInfo;
 import com.madiot.enterprise.common.util.HttpUtil;
@@ -41,10 +42,11 @@ public class DataCollectRest implements IDataCollectRest {
      */
     public CollectResponse getCollectData(CollectRequest request, CompletableFuture<Boolean> result) throws RestException {
         String responseStr = HttpUtil.getJson(connectInfo.getCollectUrl(), request.toString());
-        if (responseStr.startsWith("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML")) {
-            result.complete(false);
-        } else {
+        if (AuthUtil.checkLogin(responseStr)) {
             result.complete(true);
+        } else {
+            result.complete(false);
+            throw new RestException("请重新登陆");
         }
         JSONObject jsonObject = JSONObject.fromObject(responseStr);
         Map<String, Class> classMap = new HashMap<String, Class>();
@@ -55,7 +57,7 @@ public class DataCollectRest implements IDataCollectRest {
     @Override
     public List<Admtree> getAdmTrees(Integer parentId) throws RestException {
         String responseStr = HttpUtil.getJson(connectInfo.getAdmtreeUrl(), "id=" + parentId);
-        if (responseStr.startsWith("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML")) {
+        if (!AuthUtil.checkLogin(responseStr)) {
             throw new RestException("请先登陆监管平台");
         }
         JSONArray jsonArray = JSONArray.fromObject(responseStr);
@@ -64,9 +66,9 @@ public class DataCollectRest implements IDataCollectRest {
         while (iterator.hasNext()) {
             JSONObject jsonObject = iterator.next();
             Admtree admtree = new Admtree();
-            admtree.setId(Integer.valueOf((String)jsonObject.get("id")));
-            admtree.setName((String)jsonObject.get("text"));
-            admtree.setParentId(Integer.valueOf((String)jsonObject.get("parent_id")));
+            admtree.setId(Integer.valueOf((String) jsonObject.get("id")));
+            admtree.setName((String) jsonObject.get("text"));
+            admtree.setParentId(Integer.valueOf((String) jsonObject.get("parent_id")));
             if (jsonObject.get("state").equals("open")) {
                 admtree.setState(0);
                 admtree.setIsInit(1);

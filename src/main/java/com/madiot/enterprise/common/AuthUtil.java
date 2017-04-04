@@ -12,4 +12,12 @@ public class AuthUtil {
     public static boolean isAdmin(User user) {
         return user != null && user.getUsername().equals(ADMIN_NAME);
     }
+
+    public static boolean checkLogin(String result) {
+        if (result.startsWith("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML") && result.contains("<title>登陆页面</title>")) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
