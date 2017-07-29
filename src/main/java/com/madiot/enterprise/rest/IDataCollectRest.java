@@ -2,6 +2,7 @@ package com.madiot.enterprise.rest;
 
 import com.madiot.enterprise.common.exception.RestException;
 import com.madiot.enterprise.model.Admtree;
+import com.madiot.enterprise.model.Enttree;
 import com.madiot.enterprise.model.collect.CollectRequest;
 import com.madiot.enterprise.model.collect.CollectResponse;
 
@@ -28,4 +29,10 @@ public interface IDataCollectRest {
      */
     List<Admtree> getAdmTrees(Integer parentId) throws RestException;
 
+    /**
+     * 通过父id，http请求获取子集数据
+     * @param parentId 父id
+     * @return 子集id
+     */
+    List<Enttree> getEntTrees(Integer parentId) throws RestException;
 }

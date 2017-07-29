@@ -5,6 +5,7 @@ import com.madiot.enterprise.common.exception.RestException;
 import com.madiot.enterprise.common.http.ConnectInfo;
 import com.madiot.enterprise.common.util.HttpUtil;
 import com.madiot.enterprise.model.Admtree;
+import com.madiot.enterprise.model.Enttree;
 import com.madiot.enterprise.model.collect.CollectRequest;
 import com.madiot.enterprise.model.collect.CollectResponse;
 import com.madiot.enterprise.model.collect.EnterpriseCollect;
@@ -79,6 +80,37 @@ public class DataCollectRest implements IDataCollectRest {
             admtrees.add(admtree);
         }
         return admtrees;
+    }
+
+    @Override
+    public List<Enttree> getEntTrees(Integer parentId) throws RestException {
+        String param = null;
+        if (parentId != null) {
+            param = "id=" + parentId;
+        }
+        String responseStr = HttpUtil.getJson(connectInfo.getEnttreeUrl(), param);
+        if (!AuthUtil.checkLogin(responseStr)) {
+            throw new RestException("请先登陆监管平台");
+        }
+        JSONArray jsonArray = JSONArray.fromObject(responseStr);
+        Iterator<JSONObject> iterator = jsonArray.iterator();
+        List<Enttree> enttrees = new ArrayList<>();
+        while (iterator.hasNext()) {
+            JSONObject jsonObject = iterator.next();
+            Enttree enttree = new Enttree();
+            enttree.setId(Integer.valueOf((String) jsonObject.get("id")));
+            enttree.setName((String) jsonObject.get("text"));
+            enttree.setParentId(Integer.valueOf((String) jsonObject.get("parent_id")));
+            if (jsonObject.get("state").equals("open")) {
+                enttree.setState(0);
+                enttree.setIsInit(1);
+            } else {
+                enttree.setState(1);
+                enttree.setIsInit(0);
+            }
+            enttrees.add(enttree);
+        }
+        return enttrees;
     }
 
 }

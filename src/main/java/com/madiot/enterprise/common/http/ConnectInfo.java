@@ -20,6 +20,8 @@ public class ConnectInfo {
 
     private String admtreeUrl;
 
+    private String enttreeUrl;
+
     private int topadmId;
 
     public String getCollectUrl() {
@@ -68,6 +70,14 @@ public class ConnectInfo {
 
     public void setAdmtreeUrl(String admtreeUrl) {
         this.admtreeUrl = admtreeUrl;
+    }
+
+    public String getEnttreeUrl() {
+        return enttreeUrl;
+    }
+
+    public void setEnttreeUrl(String enttreeUrl) {
+        this.enttreeUrl = enttreeUrl;
     }
 
     public int getTopadmId() {

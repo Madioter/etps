@@ -92,6 +92,7 @@
         <property name="loginUrl" value="${loginUrl}"></property>
         <property name="imageUrl" value="${imageUrl}"></property>
         <property name="admtreeUrl" value="${admtreeUrl}"></property>
+        <property name="enttreeUrl" value="${enttreeUrl}"></property>
         <property name="topadmId" value="${topadmId}"></property>
     </bean>
 

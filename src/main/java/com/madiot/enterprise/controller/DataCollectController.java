@@ -8,6 +8,7 @@ import com.madiot.enterprise.model.*;
 import com.madiot.enterprise.service.IAdmtreeService;
 import com.madiot.enterprise.service.IAttachmentService;
 import com.madiot.enterprise.service.IDataCollectService;
+import com.madiot.enterprise.service.IEnttreeService;
 import com.madiot.enterprise.thread.CollectDataThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -42,6 +43,9 @@ public class DataCollectController {
     @Autowired
     private IAdmtreeService admtreeService;
 
+    @Autowired
+    private IEnttreeService enttreeService;
+
     @RequestMapping("/attachmentList")
     public String attachmentList() {
         return "attachment/attachmentList";
@@ -49,8 +53,8 @@ public class DataCollectController {
 
     @RequestMapping("/collectData")
     @ResponseBody
-    public String collectData(String enterpriseName, Integer localadm, int startRows, int endRows) {
-        CollectDataThread collectDataThread = new CollectDataThread(enterpriseName, localadm, startRows, endRows, dataCollectService);
+    public String collectData(String enterpriseName, Integer localadm, Integer localent, int startRows, int endRows) {
+        CollectDataThread collectDataThread = new CollectDataThread(enterpriseName, localadm, localent, startRows, endRows, dataCollectService);
         taskExecutor.execute(collectDataThread);
         try {
             return collectDataThread.getResult();
@@ -102,5 +106,11 @@ public class DataCollectController {
     @ResponseBody
     public List<AdmtreeVo> admtree(Integer id) throws RestException {
         return admtreeService.getList(id);
+    }
+
+    @RequestMapping("/enttree")
+    @ResponseBody
+    public List<EnttreeVo> enttree(Integer id) throws RestException {
+        return enttreeService.getList(id);
     }
 }

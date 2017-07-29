@@ -18,6 +18,11 @@ public class CollectRequest {
     private Integer localadm;
 
     /**
+     * 企业类型
+     */
+    private Integer enttype;
+
+    /**
      * 第几页
      */
     private int page;
@@ -51,8 +56,16 @@ public class CollectRequest {
         return localadm;
     }
 
-    public void setLocaladm(int localadm) {
+    public void setLocaladm(Integer localadm) {
         this.localadm = localadm;
+    }
+
+    public Integer getEnttype() {
+        return enttype;
+    }
+
+    public void setEnttype(Integer enttype) {
+        this.enttype = enttype;
     }
 
     public String toString() {
@@ -62,6 +75,9 @@ public class CollectRequest {
         }
         if (localadm != null) {
             builder.append("localadm=" + localadm + "&");
+        }
+        if (enttype != null) {
+            builder.append("enttype=" + enttype + "&");
         }
         builder.append("page=" + (page + 1) + "&rows=" + rows);
         return builder.toString();
