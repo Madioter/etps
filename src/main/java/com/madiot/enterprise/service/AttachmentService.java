@@ -2,8 +2,10 @@ package com.madiot.enterprise.service;
 
 import com.madiot.enterprise.dao.AttachmentDao;
 import com.madiot.enterprise.model.Attachment;
+import com.madiot.enterprise.model.AttachmentState;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 
@@ -23,11 +25,9 @@ public class AttachmentService implements IAttachmentService {
     @Resource
     private AttachmentDao attachmentDao;
 
-    public Attachment insert(String fileName) {
-        Attachment attachment = new Attachment();
-        attachment.setFileName(fileName);
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public void insert(Attachment attachment) {
         attachmentDao.insert(attachment);
-        return attachment;
     }
 
     public void update(InputStream stream, int id) {
@@ -35,7 +35,7 @@ public class AttachmentService implements IAttachmentService {
             byte[] bytes = FileCopyUtils.copyToByteArray(stream);
             update(bytes, id);
         } catch (IOException e) {
-            e.printStackTrace();
+            saveError(e, id);
         } finally {
             try {
                 stream.close();
@@ -45,22 +45,26 @@ public class AttachmentService implements IAttachmentService {
         }
     }
 
+    public void saveError(Throwable e, int id) {
+        Attachment attachment = new Attachment();
+        attachment.setId(id);
+        String error = e.getCause().toString();
+        if (error.length() > 2000) {
+            error = error.substring(0, 2000);
+        }
+        attachment.setError(error);
+        attachment.setState(AttachmentState.ERROR_STATE);
+        attachmentDao.saveError(attachment);
+    }
+
+
     public void update(byte[] bytes, int id) {
         attachmentDao.update(bytes, id);
     }
 
-    public void saveAttachment(InputStream stream, String fileName) {
-        Attachment attachment = this.insert(fileName);
-        update(stream, attachment.getId());
-    }
 
-    public void saveAttachment(byte[] bytes, String fileName) {
-        Attachment attachment = this.insert(fileName);
-        update(bytes, attachment.getId());
-    }
-
-    public void delete(int id) {
-        attachmentDao.delete(id);
+    public void saveAttachment(byte[] bytes, int attachmentId) {
+        update(bytes, attachmentId);
     }
 
     public Attachment getAttachment(int id) {

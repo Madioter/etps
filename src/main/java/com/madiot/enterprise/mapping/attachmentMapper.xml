@@ -8,10 +8,13 @@
         <result property="fileName" column="file_name"/>
         <result property="addTime" column="add_time"/>
         <result property="fileContent" column="file_content" jdbcType="BLOB"/>
+        <result property="error" column="error"/>
+        <result property="state" column="state"/>
+        <result property="param" column="param"/>
     </resultMap>
 
     <select id="selectByParam" resultMap="attachmentResult">
-        select s.id,s.file_name,s.add_time
+        select s.id,s.file_name,s.add_time，s.error, s.state, s.param
         from t_attachment s
         limit #{startNum}, #{pageSize}
     </select>
@@ -23,14 +26,28 @@
     </select>
 
     <update id="update">
-        update t_attachment set file_content = #{fileContent, jdbcType=BLOB} where id = #{id}
+        update t_attachment
+        <set>
+            file_content = #{fileContent, jdbcType=BLOB},
+            state = 1
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="saveError">
+        update t_attachment
+        <set>
+            state = #{state},
+            error = #{error}
+        </set>
+        where id = #{id}
     </update>
 
     <insert id="insert" parameterType="com.madiot.enterprise.model.Attachment"
             useGeneratedKeys="true" keyProperty="id">
-        insert into t_attachment(file_name)
+        insert into t_attachment(file_name,state,param)
         values
-        (#{fileName})
+        (#{fileName},0,#{param})
     </insert>
 
     <delete id="delete">

@@ -28,6 +28,21 @@ public class Attachment {
      */
     private Object fileContent;
 
+    /**
+     * 异常信息
+     */
+    private String error;
+
+    /**
+     * 附件状态
+     */
+    private int state = AttachmentState.START_STATE;
+
+    /**
+     * 参数
+     */
+    private String param;
+
     public String getFileName() {
         return fileName;
     }
@@ -58,5 +73,29 @@ public class Attachment {
 
     public void setFileContent(Object fileContent) {
         this.fileContent = fileContent;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public String getParam() {
+        return param;
+    }
+
+    public void setParam(String param) {
+        this.param = param;
     }
 }

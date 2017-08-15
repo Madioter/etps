@@ -42,8 +42,8 @@
         企业／个体名称: <input type="text" class="easyui-text" style="width:110px" id="name"/>
         所属辖区: <input class="easyui-combotree" id = "localadm" name="localadm" style="width: 260px;"
                      url="<%=path%>/data-collect/admtree" style="width:260px;" panelAlign="right" panelWidth="260px" panelHeight="300px"/>
-        企业类型: <input class="easyui-combotree" id = "localent" name="localent" style="width: 260px;"
-                     url="<%=path%>/data-collect/enttree" style="width:260px;" panelAlign="right" panelWidth="260px" panelHeight="300px"/><br/>
+        <%--企业类型: <input class="easyui-combotree" id = "localent" name="localent" style="width: 260px;"
+                     url="<%=path%>/data-collect/enttree" style="width:260px;" panelAlign="right" panelWidth="260px" panelHeight="300px"/><br/>--%>
         从: <input type="text" class="easyui-text" style="width:110px" id="startRows"/> 条
         至: <input type="text" class="easyui-text" style="width:110px" id="endRows"/> 条（请一次选择不要选择超过500条）
         <a href="javascript:void(0);" class="easyui-linkbutton" iconCls="icon-search" onclick="collectData();">数据采集</a>

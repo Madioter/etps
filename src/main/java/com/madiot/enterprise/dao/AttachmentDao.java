@@ -23,4 +23,6 @@ public interface AttachmentDao {
     public void delete(int id);
 
     public int getAllCount();
+
+    public void saveError(Attachment attachment);
 }

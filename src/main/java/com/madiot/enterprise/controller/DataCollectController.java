@@ -10,6 +10,7 @@ import com.madiot.enterprise.service.IAttachmentService;
 import com.madiot.enterprise.service.IDataCollectService;
 import com.madiot.enterprise.service.IEnttreeService;
 import com.madiot.enterprise.thread.CollectDataThread;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
@@ -53,7 +54,7 @@ public class DataCollectController {
 
     @RequestMapping("/collectData")
     @ResponseBody
-    public String collectData(String enterpriseName, Integer localadm, Integer localent, int startRows, int endRows) {
+        public String collectData(String enterpriseName, Integer localadm, Integer localent, int startRows, int endRows) {
         CollectDataThread collectDataThread = new CollectDataThread(enterpriseName, localadm, localent, startRows, endRows, dataCollectService);
         taskExecutor.execute(collectDataThread);
         try {
@@ -93,10 +94,9 @@ public class DataCollectController {
     @RequestMapping("/getFile")
     public void getFile(HttpServletResponse response, int id) {
         Attachment attachment = attachmentService.getAttachment(id);
-        response.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName() + ';');
         byte[] content = (byte[])attachment.getFileContent();
         try {
-            FileUpDownUtils.exportExcel(response, attachment.getFileName(),content);
+            FileUpDownUtils.exportExcel(response, attachment.getFileName(), content);
         } catch (IOException e) {
             e.printStackTrace();
         }

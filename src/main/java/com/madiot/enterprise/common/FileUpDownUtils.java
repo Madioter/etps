@@ -63,7 +63,6 @@ public class FileUpDownUtils {
 
     public static void exportExcel(HttpServletResponse response, HSSFWorkbook workbook) throws IOException {
         String fileName = DateUtils.simpleDateFormat(new Date(), "yyyyMMhhHHmmss");
-        fileName = fileName + ".xlsx";
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName);
         OutputStream outputStream = response.getOutputStream();
@@ -73,9 +72,8 @@ public class FileUpDownUtils {
     }
 
     public static void exportExcel(HttpServletResponse response, String fileName, byte[] bytes) throws IOException {
-        fileName = fileName + ".xlsx";
         response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+        response.addHeader("Content-Disposition", "attachment;filename=" + fileName + ".xls");
         OutputStream outputStream = response.getOutputStream();
         outputStream.write(bytes);
         outputStream.flush();

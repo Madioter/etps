@@ -74,6 +74,8 @@ public class HttpUtil {
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
             URLConnection conn = realUrl.openConnection();
+            conn.setConnectTimeout(60000);
+            conn.setReadTimeout(60000);
             // 设置通用的请求属性
             conn.setRequestProperty("accept", "application/json, text/javascript, */*; q=0.01");
             conn.setRequestProperty("connection", "Keep-Alive");

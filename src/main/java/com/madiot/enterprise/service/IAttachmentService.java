@@ -11,15 +11,17 @@ import java.util.List;
  */
 public interface IAttachmentService {
 
-    public void saveAttachment(InputStream stream, String fileName);
+    void insert(Attachment attachment);
 
-    public void saveAttachment(byte[] bytes, String fileName);
+    void saveAttachment(byte[] bytes, int attachmentId);
 
-    public Attachment getAttachment(int id);
+    Attachment getAttachment(int id);
 
-    public List<Attachment> selectByParam(int rows, int page);
+    List<Attachment> selectByParam(int rows, int page);
 
-    public int getAllCount();
+    int getAllCount();
 
-    public void deleteAttachment(int id);
+    void deleteAttachment(int id);
+
+    void saveError(Throwable e, int id);
 }
