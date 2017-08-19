@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="selectByParam" resultMap="attachmentResult">
-        select s.id,s.file_name,s.add_time，s.error, s.state, s.param
+        select s.id, s.file_name, s.add_time, s.error, s.state, s.param
         from t_attachment s
         limit #{startNum}, #{pageSize}
     </select>
@@ -43,11 +43,12 @@
         where id = #{id}
     </update>
 
-    <insert id="insert" parameterType="com.madiot.enterprise.model.Attachment"
-            useGeneratedKeys="true" keyProperty="id">
-        insert into t_attachment(file_name,state,param)
-        values
-        (#{fileName},0,#{param})
+    <insert id="insert" parameterType="com.madiot.enterprise.model.Attachment">
+        <selectKey keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_attachment(id, file_name, state, param)
+        values (#{id}, #{fileName}, 0, #{param})
     </insert>
 
     <delete id="delete">

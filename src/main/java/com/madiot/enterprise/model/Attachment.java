@@ -9,14 +9,14 @@ import java.util.Date;
 public class Attachment {
 
     /**
-     * 文件名
-     */
-    private String fileName;
-
-    /**
      * 主键
      */
     private Integer id;
+
+    /**
+     * 文件名
+     */
+    private String fileName;
 
     /**
      * 创建时间

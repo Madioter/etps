@@ -16,13 +16,13 @@ public interface AttachmentDao {
 
     public Attachment getAttachment(int id);
 
-    public void update(@Param("fileContent")Object fileContent,@Param("id")int id);
+    public int update(@Param("fileContent")Object fileContent,@Param("id")int id);
 
-    public void insert(Attachment attachment);
+    public int insert(Attachment attachment);
 
-    public void delete(int id);
+    public int delete(int id);
 
     public int getAllCount();
 
-    public void saveError(Attachment attachment);
+    public int saveError(Attachment attachment);
 }

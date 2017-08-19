@@ -27,9 +27,12 @@
         <thead>
         <tr>
             <th data-options="field:'id',hidden:true">ID</th>
-            <th data-options="field:'fileName',width:100,align:'left'">文件名称</th>
-            <th data-options="field:'addTime',width:80,align:'left',formatter: formatDatebox">添加时间</th>
-            <th data-options="field:'option',width:150,align:'center',formatter:optionRenderer">操作</th>
+            <th data-options="field:'fileName',width:25,align:'center'">文件名称</th>
+            <th data-options="field:'addTime',width:18,align:'center',formatter: formatDatebox">添加时间</th>
+            <th data-options="field:'state',width:10,align:'center',formatter:stateRenderer">状态</th>
+            <%--<th data-options="field:'param',width:20,align:'center'">参数</th>--%>
+            <th data-options="field:'error',width:40,align:'center'">异常</th>
+            <th data-options="field:'option',width:17,align:'center',formatter:optionRenderer">操作</th>
         </tr>
         </thead>
     </table>
@@ -40,8 +43,9 @@
         </c:if>
         <br/>
         企业／个体名称: <input type="text" class="easyui-text" style="width:110px" id="name"/>
-        所属辖区: <input class="easyui-combotree" id = "localadm" name="localadm" style="width: 260px;"
-                     url="<%=path%>/data-collect/admtree" style="width:260px;" panelAlign="right" panelWidth="260px" panelHeight="300px"/>
+        所属辖区: <input class="easyui-combotree" id="localadm" name="localadm" style="width: 260px;"
+                     url="<%=path%>/data-collect/admtree" style="width:260px;" panelAlign="right" panelWidth="260px"
+                     panelHeight="300px"/>
         <%--企业类型: <input class="easyui-combotree" id = "localent" name="localent" style="width: 260px;"
                      url="<%=path%>/data-collect/enttree" style="width:260px;" panelAlign="right" panelWidth="260px" panelHeight="300px"/><br/>--%>
         从: <input type="text" class="easyui-text" style="width:110px" id="startRows"/> 条
@@ -103,7 +107,7 @@
         if (page) {
             $('#attachmentList').datagrid('options').pageNumber = page;
         }
-        $('#enterpriseList').datagrid("reload");
+        $('#attachmentList').datagrid("reload");
     }
 
     function getParams() {
@@ -129,17 +133,17 @@
             endRows = 100;
             $('#endRows').val(100);
         }
-
         var data = {
             enterpriseName: $("#name").val(),
             localadm: $("#localadm").combotree('getValue'),
-            localent: $("#localent").combotree('getValue'),
+            //localent: $("#localent").combotree('getValue'),
             startRows: startRows,
             endRows: endRows
         };
 
         $.post("<%=path%>/data-collect/collectData", data, function (data) {
             alert(data);
+            reloadList();
         });
     }
 
@@ -164,7 +168,7 @@
         });
     }
 
-    function deleteAttachment() {
+    function deleteAttachment(id) {
         $.post("<%=path%>/data-collect/deleteAttachment", {id: id}, function (data) {
             var jsonData = data;
             if (jsonData.success) {
@@ -177,9 +181,25 @@
     }
 
     function optionRenderer(val, rec) {
-        var button = "<a href='javascript:void(0);' class='easyui-linkbutton' onclick='doExport(" + rec.id + ")'>下载</a>&nbsp;&nbsp;";
+        var button = "";
+        if (!rec.error) {
+            button += "<a href='javascript:void(0);' class='easyui-linkbutton' onclick='doExport(" + rec.id + ")'>下载</a>&nbsp;&nbsp;";
+        }
         button += "<a href='javascript:void(0);' class='easyui-linkbutton' onclick='deleteAttachment(" + rec.id + ")'>删除</a>";
         return button;
+    }
+
+    function stateRenderer(val, rec) {
+        switch (val) {
+            case 0:
+                return "开始生成";
+            case 1:
+                return "生成完成";
+            case 2:
+                return "处理超时";
+            case 9:
+                return "发生异常";
+        }
     }
 
     $(function () {

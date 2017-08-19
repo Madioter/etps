@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface IAttachmentService {
 
-    void insert(Attachment attachment);
+    int insert(Attachment attachment);
 
-    void saveAttachment(byte[] bytes, int attachmentId);
+    int saveAttachment(byte[] bytes, int attachmentId);
 
     Attachment getAttachment(int id);
 
@@ -21,7 +21,7 @@ public interface IAttachmentService {
 
     int getAllCount();
 
-    void deleteAttachment(int id);
+    int deleteAttachment(int id);
 
-    void saveError(Throwable e, int id);
+    int saveError(Throwable e, int id);
 }

@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
@@ -39,6 +40,7 @@ public class DataCollectService implements IDataCollectService {
     private IAttachmentService attachmentService;
 
     @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void collectData(String enterpriseName, Integer localadm, Integer localent, int startRows, int endRows, CompletableFuture<Boolean> result) throws RestException {
         Attachment attachment = null;
         try {
@@ -66,7 +68,7 @@ public class DataCollectService implements IDataCollectService {
 
             attachment = new Attachment();
             attachment.setFileName(getFileName(enterpriseName, startRows, endRows));
-            attachment.setParam(JSONUtils.toJSONString(collectRequest));
+            attachment.setParam(collectRequest.toString());
             attachmentService.insert(attachment);
 
             int total = 0;

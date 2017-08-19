@@ -26,16 +26,17 @@ public class AttachmentService implements IAttachmentService {
     private AttachmentDao attachmentDao;
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public void insert(Attachment attachment) {
-        attachmentDao.insert(attachment);
+    public int insert(Attachment attachment) {
+        return attachmentDao.insert(attachment);
     }
 
-    public void update(InputStream stream, int id) {
+    public int update(InputStream stream, int id) {
         try {
             byte[] bytes = FileCopyUtils.copyToByteArray(stream);
-            update(bytes, id);
+            return update(bytes, id);
         } catch (IOException e) {
             saveError(e, id);
+            return 0;
         } finally {
             try {
                 stream.close();
@@ -45,26 +46,29 @@ public class AttachmentService implements IAttachmentService {
         }
     }
 
-    public void saveError(Throwable e, int id) {
+    public int saveError(Throwable e, int id) {
         Attachment attachment = new Attachment();
         attachment.setId(id);
-        String error = e.getCause().toString();
+        String error = e.getMessage();
+        if (e.getCause() != null) {
+            error += ", cause:" + e.getCause().toString();
+        }
         if (error.length() > 2000) {
             error = error.substring(0, 2000);
         }
         attachment.setError(error);
         attachment.setState(AttachmentState.ERROR_STATE);
-        attachmentDao.saveError(attachment);
+        return attachmentDao.saveError(attachment);
     }
 
 
-    public void update(byte[] bytes, int id) {
-        attachmentDao.update(bytes, id);
+    public int update(byte[] bytes, int id) {
+        return attachmentDao.update(bytes, id);
     }
 
 
-    public void saveAttachment(byte[] bytes, int attachmentId) {
-        update(bytes, attachmentId);
+    public int saveAttachment(byte[] bytes, int attachmentId) {
+        return update(bytes, attachmentId);
     }
 
     public Attachment getAttachment(int id) {
@@ -79,7 +83,7 @@ public class AttachmentService implements IAttachmentService {
         return attachmentDao.getAllCount();
     }
 
-    public void deleteAttachment(int id) {
-        attachmentDao.delete(id);
+    public int deleteAttachment(int id) {
+        return attachmentDao.delete(id);
     }
 }

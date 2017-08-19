@@ -54,12 +54,12 @@ public class DataCollectController {
 
     @RequestMapping("/collectData")
     @ResponseBody
-        public String collectData(String enterpriseName, Integer localadm, Integer localent, int startRows, int endRows) {
+    public String collectData(String enterpriseName, Integer localadm, Integer localent, int startRows, int endRows) {
         CollectDataThread collectDataThread = new CollectDataThread(enterpriseName, localadm, localent, startRows, endRows, dataCollectService);
         taskExecutor.execute(collectDataThread);
         try {
             return collectDataThread.getResult();
-        } catch (ExecutionException |InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             return "执行异常，请重新执行";
         }
     }
@@ -94,7 +94,7 @@ public class DataCollectController {
     @RequestMapping("/getFile")
     public void getFile(HttpServletResponse response, int id) {
         Attachment attachment = attachmentService.getAttachment(id);
-        byte[] content = (byte[])attachment.getFileContent();
+        byte[] content = (byte[]) attachment.getFileContent();
         try {
             FileUpDownUtils.exportExcel(response, attachment.getFileName(), content);
         } catch (IOException e) {
